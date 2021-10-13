@@ -1,14 +1,26 @@
 const express = require('express');
+const routerApi = require('./routers');
+const {
+  logErrors,
+  errorHandler,
+  boomErrorHandler
+} = require('./midleware/error.handlers');
 
 const app = express();
+app.use(express.json());
 const port = 3001;
 
-app.get('/', (req, resp) =>
-{
-  resp.send('Hello World')
-})
+routerApi(app);
+app.use(logErrors);
+app.use(errorHandler);
+app.use(boomErrorHandler);
 
-app.listen(port, () =>
-{
-  console.log(`Server is listening on http://localhost:${port}`)
-})
+app.get('/', (req, resp) => {
+  resp.send('Hello World');
+});
+
+app.listen(port, () => {
+  console.log(
+    `Server is listening on http://localhost:${port}`
+  );
+});
