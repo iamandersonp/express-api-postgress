@@ -13,7 +13,8 @@ class ProductsService {
         id: faker.datatype.uuid(),
         name: faker.commerce.productName(),
         image: faker.image.imageUrl(),
-        price: parseInt(faker.commerce.price(), 10)
+        price: parseInt(faker.commerce.price(), 10),
+        isLocked: faker.datatype.boolean()
       };
       this.products.push(element);
     }
@@ -34,6 +35,9 @@ class ProductsService {
     const index = this.getIndex(id);
     if (index === -1) {
       throw boom.notFound('Product not found');
+    }
+    if (this.products[index].isLocked) {
+      throw boom.conflict('Product is Locked');
     }
     return this.products[index];
   }

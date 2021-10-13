@@ -12,8 +12,8 @@ const port = 3001;
 
 routerApi(app);
 app.use(logErrors);
-app.use(errorHandler);
 app.use(boomErrorHandler);
+app.use(errorHandler);
 
 app.get('/', (req, resp) => {
   resp.send('Hello World');
