@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  db:
+    container_name: db
+    image: 'postgres:${TAG}'
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  dbmanager:
+    image: bitnami/phppgadmin:7
+    restart: always
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT_NUMBER: ${DB_PORT}
+      DATABASE_SSL_MODE: allow
+      ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - 8081:8080
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
