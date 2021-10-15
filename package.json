@@ -20,5 +20,14 @@
     "eslint-plugin-prettier": "^4.0.0",
     "nodemon": "^2.0.13",
     "prettier": "^2.4.1"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "faker": "^5.5.3",
+    "joi": "^17.4.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
   }
 }
