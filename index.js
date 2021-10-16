@@ -4,7 +4,8 @@ const routerApi = require('./routers');
 const {
   logErrors,
   errorHandler,
-  boomErrorHandler
+  boomErrorHandler,
+  ormErrorHandler
 } = require('./midleware/error.handlers');
 
 const whitelist = [
@@ -28,6 +29,7 @@ const port = process.env.PORT || 3001;
 
 routerApi(app);
 app.use(logErrors);
+app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
