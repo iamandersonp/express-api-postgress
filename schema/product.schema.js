@@ -9,14 +9,16 @@ const image = joi.string().uri();
 const createProductSchema = joi.object({
   name: name.required(),
   price: price.required(),
-  image: image.required()
+  image: image.required(),
+  categoryId: id.required()
 });
 
 const updateProductSchema = joi.object({
   name: name,
   uuid: uuid,
   price: price,
-  image: image
+  image: image,
+  categoryId: id
 });
 
 const getProductSchema = joi.object({

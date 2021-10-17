@@ -4,6 +4,8 @@ const {
   Sequelize
 } = require('sequelize');
 
+const { CATEGORY_TABLE } = require('./category.model');
+
 const PRODUCT_TABLE = 'products';
 
 const ProductSchema = {
@@ -33,12 +35,23 @@ const ProductSchema = {
     type: DataTypes.DATE,
     field: 'created_at',
     defaultValue: Sequelize.NOW
+  },
+  categoryId: {
+    allowNull: true,
+    type: DataTypes.INTEGER,
+    field: 'category_id',
+    references: {
+      model: CATEGORY_TABLE,
+      key: 'id'
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'SET NULL'
   }
 };
 
 class Product extends Model {
-  static associate() {
-    // assocciate
+  static associate(models) {
+    this.belongsTo(models.Category, { as: 'category' });
   }
 
   static config(sequelize) {
