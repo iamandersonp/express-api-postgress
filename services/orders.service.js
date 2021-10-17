@@ -6,7 +6,9 @@ class OrdersService {
   constructor() {}
 
   async getAll() {
-    const rta = await models.Order.findAll();
+    const rta = await models.Order.findAll({
+      include: ['items']
+    });
     return rta;
   }
 
