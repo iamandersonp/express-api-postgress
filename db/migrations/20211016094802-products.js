@@ -14,6 +14,6 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.drop(PRODUCT_TABLE);
+    await queryInterface.dropTable(PRODUCT_TABLE);
   }
 };

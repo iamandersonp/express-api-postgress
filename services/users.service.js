@@ -6,12 +6,16 @@ class UsersService {
   constructor() {}
 
   async getAll() {
-    const rta = await models.User.findAll();
+    const rta = await models.User.findAll({
+      include: ['customer']
+    });
     return rta;
   }
 
   async fidOne(id) {
-    const user = await models.User.findByPk(id);
+    const user = await models.User.findByPk(id, {
+      include: ['customer']
+    });
     if (!user) {
       throw boom.notFound('User not found');
     }
