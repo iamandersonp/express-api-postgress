@@ -1,5 +1,5 @@
 {
-  "name": "my-store",
+  "name": "express-api-postgress",
   "version": "1.0.0",
   "description": "a Store biund with nodejs and express",
   "main": "index.js",
