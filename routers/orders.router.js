@@ -33,7 +33,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const order = await service.fidOne(id);
+      const order = await service.findOne(id);
       res.status(200).json(order);
     } catch (error) {
       next(error);

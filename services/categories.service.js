@@ -10,7 +10,7 @@ class CategoriesService {
     return rta;
   }
 
-  async fidOne(id) {
+  async findOne(id) {
     const category = await models.Category.findByPk(id, {
       include: ['products']
     });
@@ -26,13 +26,13 @@ class CategoriesService {
   }
 
   async update(id, data) {
-    const category = await this.fidOne(id);
+    const category = await this.findOne(id);
     const rta = await category.update(data);
     return rta;
   }
 
   async delete(id) {
-    const category = await this.fidOne(id);
+    const category = await this.findOne(id);
     await category.destroy();
     return { message: 'Category Deleted' };
   }

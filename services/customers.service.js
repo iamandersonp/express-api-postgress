@@ -18,7 +18,7 @@ class CustomersService {
     return rta;
   }
 
-  async fidOne(id) {
+  async findOne(id) {
     const user = await models.Customer.findByPk(id, {
       include: ['user']
     });
@@ -48,14 +48,14 @@ class CustomersService {
   }
 
   async update(id, data) {
-    const customer = await this.fidOne(id);
+    const customer = await this.findOne(id);
     let rta = await customer.update(data);
     rta = this.removePassword(rta);
     return rta;
   }
 
   async delete(id) {
-    const customer = await this.fidOne(id);
+    const customer = await this.findOne(id);
     await customer.destroy();
     return { message: 'Customer Deleted' };
   }
