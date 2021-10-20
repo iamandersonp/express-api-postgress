@@ -18,9 +18,20 @@ class UsersService {
     return rta;
   }
 
-  async fidOne(id) {
-    const user = await models.User.findByPk(id, {
+  async findOne(id) {
+    let user = await models.User.findByPk(id, {
       include: ['customer']
+    });
+    if (!user) {
+      throw boom.notFound('User not found');
+    }
+    user = this.removePassword(user);
+    return user;
+  }
+
+  async findByEmail(email) {
+    const user = await models.User.findOne({
+      where: { email }
     });
     if (!user) {
       throw boom.notFound('User not found');
@@ -39,7 +50,7 @@ class UsersService {
   }
 
   async update(id, data) {
-    const user = await this.fidOne(id);
+    const user = await this.findOne(id);
     if (data.password) {
       const hash = await bcrypt.hash(data.password, 10);
       const data = {
@@ -53,7 +64,7 @@ class UsersService {
   }
 
   async delete(id) {
-    const user = await this.fidOne(id);
+    const user = await this.findOne(id);
     await user.destroy();
     return { message: 'User Deleted' };
   }
