@@ -1,21 +1,32 @@
 const express = require('express');
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
+const { config } = require('./../config/config');
 const router = express.Router();
 
 /**
  * @swagger
- * /users:
- *   get:
- *     summary: Retrieve a list of JSONPlaceholder users
- *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
+ * /login:
+ *   post:
+ *     summary: Retrieve the loged user with the auth token
+ *     description: Retrieve the loged user with the auth token.
  */
 router.post(
   '/login',
   passport.authenticate('local', { session: false }),
   async (req, res, next) => {
     try {
-      res.status(200).json(req.user);
+      const user = req.user;
+      const payload = {
+        sub: user.id,
+        role: ''
+      };
+      const token = jwt.sign(payload, config.jwt_secret);
+      res.status(200).json({
+        user,
+        token
+      });
     } catch (error) {
       next(error);
     }

@@ -9,7 +9,8 @@ const config = {
   db_host: process.env.DB_HOST,
   db_port: process.env.DB_PORT,
   dialect: process.env.DIALECT,
-  URI: process.env.URI
+  URI: process.env.URI,
+  jwt_secret: process.env.JWTSECRET
 };
 
 module.exports = { config };

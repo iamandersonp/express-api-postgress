@@ -1,4 +1,6 @@
 const express = require('express');
+const passport = require('passport');
+
 const CategoriesService = require('../services/categories.service');
 const validatorHandler = require('../midleware/validator.handler');
 const {
@@ -12,10 +14,6 @@ const service = new CategoriesService();
 
 /**
  * @swagger
- * /users:
- *   get:
- *     summary: Retrieve a list of JSONPlaceholder users
- *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
 router.get('/', async (req, res, next) => {
   try {
@@ -42,6 +40,7 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(createCategorySchema, 'body'),
   async (req, res, next) => {
     try {
@@ -56,6 +55,7 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getCategorySchema, 'params'),
   validatorHandler(updateCategorySchema, 'body'),
   async (req, res, next) => {
@@ -72,6 +72,7 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getCategorySchema, 'params'),
   async (req, res, next) => {
     try {
