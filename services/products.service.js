@@ -12,7 +12,7 @@ class ProductsService {
     return rta;
   }
 
-  async fidOne(id) {
+  async findOne(id) {
     const product = await models.Product.findByPk(id, {
       include: ['category']
     });
@@ -28,13 +28,13 @@ class ProductsService {
   }
 
   async update(id, data) {
-    const customer = await this.fidOne(id);
+    const customer = await this.findOne(id);
     const rta = await customer.update(data);
     return rta;
   }
 
   async delete(id) {
-    const product = await this.fidOne(id);
+    const product = await this.findOne(id);
     await product.destroy();
     return { message: 'Product Deleted' };
   }

@@ -32,7 +32,7 @@ router.get(
   async (req, res, next) => {
     try {
       const { id } = req.params;
-      const customers = await service.fidOne(id);
+      const customers = await service.findOne(id);
       res.status(200).json(customers);
     } catch (error) {
       next(error);

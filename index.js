@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const passport = require('passport');
 const routerApi = require('./routers');
 const {
   logErrors,
@@ -25,8 +26,11 @@ const options = {
 const app = express();
 app.use(express.json());
 app.use(cors(options));
+
 const port = process.env.PORT || 3001;
 
+require('./utils/auth');
+app.use(passport.initialize());
 routerApi(app);
 app.use(logErrors);
 app.use(ormErrorHandler);

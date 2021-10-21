@@ -12,7 +12,7 @@ class OrdersService {
     return rta;
   }
 
-  async fidOne(id) {
+  async findOne(id) {
     const order = await models.Order.findByPk(id, {
       include: [
         {
@@ -39,13 +39,13 @@ class OrdersService {
   }
 
   async update(id, data) {
-    const order = await this.fidOne(id);
+    const order = await this.findOne(id);
     const rta = await order.update(data);
     return rta;
   }
 
   async delete(id) {
-    const order = await this.fidOne(id);
+    const order = await this.findOne(id);
     await order.destroy();
     return { message: 'Order Deleted' };
   }
