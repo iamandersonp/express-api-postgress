@@ -1,8 +1,10 @@
 'use strict';
 const { DataTypes, Sequelize } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 const { ORDER_TABLE } = require('./../models/order.model');
 const { USER_TABLE } = require('./../models/user.model');
+const { ROLE_TABLE } = require('./../models/role.model');
 const {
   PRODUCT_TABLE
 } = require('./../models/product.model');
@@ -18,6 +20,46 @@ const {
 
 module.exports = {
   up: async (queryInterface) => {
+    // Create Role table
+    await queryInterface.createTable(ROLE_TABLE, {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER
+      },
+      role: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        unique: true
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        field: 'created_at',
+        defaultValue: Sequelize.NOW
+      }
+    });
+    // Insert Default Roles
+    await queryInterface.bulkInsert(ROLE_TABLE, [
+      {
+        role: 'CUSTOMER',
+        created_at: new Date()
+      },
+      {
+        role: 'SELLER',
+        created_at: new Date()
+      },
+      {
+        role: 'ADMIN',
+        created_at: new Date()
+      },
+      {
+        role: 'SUPER ADMIN',
+        created_at: new Date()
+      }
+    ]);
+
     // Create User Table
     await queryInterface.createTable(USER_TABLE, {
       id: {
@@ -45,8 +87,31 @@ module.exports = {
         type: DataTypes.DATE,
         field: 'created_at',
         defaultValue: Sequelize.NOW
+      },
+      roleId: {
+        field: 'role_id',
+        defaultValue: 1,
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: ROLE_TABLE,
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       }
     });
+    // Insert Default Admin User
+    const hash = await bcrypt.hash('123456', 10);
+    await queryInterface.bulkInsert(USER_TABLE, [
+      {
+        username: 'admin',
+        email: 'admin@domain.com',
+        password: hash,
+        role_id: 4,
+        created_at: new Date()
+      }
+    ]);
 
     // create Category Table
     await queryInterface.createTable(CATEGORY_TABLE, {
@@ -226,11 +291,12 @@ module.exports = {
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable(USER_TABLE);
-    await queryInterface.dropTable(CATEGORY_TABLE);
+    await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
+    await queryInterface.dropTable(ORDER_TABLE);
     await queryInterface.dropTable(PRODUCT_TABLE);
     await queryInterface.dropTable(CUSTOMER_TABLE);
-    await queryInterface.dropTable(ORDER_TABLE);
-    await queryInterface.dropTable(ORDER_PRODUCT_TABLE);
+    await queryInterface.dropTable(CATEGORY_TABLE);
+    await queryInterface.dropTable(USER_TABLE);
+    await queryInterface.dropTable(ROLE_TABLE);
   }
 };

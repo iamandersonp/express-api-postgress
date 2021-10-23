@@ -1,3 +1,4 @@
+const { Role, RoleSchema } = require('./role.model');
 const { User, UserSchema } = require('./user.model');
 const {
   Product,
@@ -22,6 +23,7 @@ const {
 } = require('./order-products.model');
 
 function setupModels(sequelize) {
+  Role.init(RoleSchema, Role.config(sequelize));
   User.init(UserSchema, User.config(sequelize));
   Product.init(ProductSchema, Product.config(sequelize));
   Customer.init(CustomerSchema, Customer.config(sequelize));
@@ -32,6 +34,7 @@ function setupModels(sequelize) {
     OrderProduct.config(sequelize)
   );
 
+  Role.associate(sequelize.models);
   User.associate(sequelize.models);
   Customer.associate(sequelize.models);
   Category.associate(sequelize.models);
