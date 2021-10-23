@@ -13,19 +13,30 @@ class CustomersService {
 
   async getAll() {
     const rta = await models.Customer.findAll({
-      include: ['user']
+      include: [
+        {
+          association: 'user',
+          include: ['role']
+        }
+      ]
     });
     return rta;
   }
 
   async findOne(id) {
-    const user = await models.Customer.findByPk(id, {
-      include: ['user']
+    let customer = await models.Customer.findByPk(id, {
+      include: [
+        {
+          association: 'user',
+          include: ['role']
+        }
+      ]
     });
-    if (!user) {
+    if (!customer) {
       throw boom.notFound('Customer not found');
     }
-    return user;
+    customer = this.removePassword(customer);
+    return customer;
   }
 
   async create(data) {

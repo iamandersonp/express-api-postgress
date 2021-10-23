@@ -1,8 +1,11 @@
 const express = require('express');
+const passport = require('passport');
+
+const { checkRole } = require('../midleware/auth.handlers');
 const CategoriesService = require('../services/orders.service');
 const validatorHandler = require('../midleware/validator.handler');
 const {
-  createOrderSchema,
+  //createOrderSchema,
   updateOrderSchema,
   addItemSchema,
   getOrderSchema
@@ -13,22 +16,24 @@ const service = new CategoriesService();
 
 /**
  * @swagger
- * /users:
- *   get:
- *     summary: Retrieve a list of JSONPlaceholder users
- *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-router.get('/', async (req, res, next) => {
-  try {
-    const orders = await service.getAll();
-    res.status(200).json(orders);
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
+  async (req, res, next) => {
+    try {
+      const orders = await service.getAll();
+      res.status(200).json(orders);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getOrderSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -43,10 +48,13 @@ router.get(
 
 router.post(
   '/',
-  validatorHandler(createOrderSchema, 'body'),
+  passport.authenticate('jwt', { session: false }),
+  //validatorHandler(createOrderSchema, 'body'),
   async (req, res, next) => {
     try {
-      const body = req.body;
+      const body = {
+        userId: req.user.sub
+      };
       const order = await service.create(body);
       res.status(201).json(order);
     } catch (error) {
@@ -57,6 +65,7 @@ router.post(
 
 router.post(
   '/add-item',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(addItemSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -71,6 +80,7 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
   validatorHandler(getOrderSchema, 'params'),
   validatorHandler(updateOrderSchema, 'body'),
   async (req, res, next) => {
@@ -87,6 +97,8 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(getOrderSchema, 'params'),
   async (req, res, next) => {
     try {
