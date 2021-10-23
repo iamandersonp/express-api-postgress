@@ -1,4 +1,7 @@
 const express = require('express');
+const passport = require('passport');
+
+const { checkRole } = require('../midleware/auth.handlers');
 const ProductsService = require('../services/products.service');
 const validatorHandler = require('../midleware/validator.handler');
 const {
@@ -12,10 +15,6 @@ const service = new ProductsService();
 
 /**
  * @swagger
- * /users:
- *   get:
- *     summary: Retrieve a list of JSONPlaceholder users
- *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
 router.get('/', async (req, res, next) => {
   try {
@@ -42,6 +41,8 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(createProductSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -56,6 +57,8 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(getProductSchema, 'params'),
   validatorHandler(updateProductSchema, 'body'),
   async (req, res, next) => {
@@ -72,6 +75,8 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(getProductSchema, 'param'),
   async (req, res, next) => {
     try {

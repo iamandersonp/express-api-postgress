@@ -1,4 +1,7 @@
 const express = require('express');
+const passport = require('passport');
+
+const { checkRole } = require('../midleware/auth.handlers');
 const UsersService = require('../services/users.service');
 const validatorHandler = require('../midleware/validator.handler');
 const {
@@ -17,17 +20,24 @@ const service = new UsersService();
  *     summary: Retrieve a list of JSONPlaceholder users
  *     description: Retrieve a list of users from JSONPlaceholder. Can be used to populate a list of fake users when prototyping or testing an API.
  */
-router.get('/', async (req, res, next) => {
-  try {
-    const products = await service.getAll();
-    res.status(200).json(products);
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
+  async (req, res, next) => {
+    try {
+      const products = await service.getAll();
+      res.status(200).json(products);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
@@ -42,6 +52,8 @@ router.get(
 
 router.post(
   '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(createUserSchema, 'body'),
   async (req, res, next) => {
     try {
@@ -56,6 +68,8 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(getUserSchema, 'params'),
   validatorHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
@@ -72,6 +86,8 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRole(2, 3, 4),
   validatorHandler(getUserSchema, 'params'),
   async (req, res, next) => {
     try {
