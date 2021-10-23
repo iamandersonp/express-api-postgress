@@ -13,14 +13,14 @@ class UsersService {
 
   async getAll() {
     const rta = await models.User.findAll({
-      include: ['customer']
+      include: ['role', 'customer']
     });
     return rta;
   }
 
   async findOne(id) {
     let user = await models.User.findByPk(id, {
-      include: ['customer']
+      include: ['role', 'customer']
     });
     if (!user) {
       throw boom.notFound('User not found');
@@ -31,7 +31,8 @@ class UsersService {
 
   async findByEmail(email) {
     const user = await models.User.findOne({
-      where: { email }
+      where: { email },
+      include: ['role', 'customer']
     });
     if (!user) {
       throw boom.notFound('User not found');
