@@ -9,6 +9,8 @@ first install dependencies using npm install
 Setup env
 copi .env.example to .env and edit file
 Exaple .env configuration
+
+```bash
 NODE_ENV="development"
 TAG=13
 DIALECT="postgres"
@@ -19,7 +21,8 @@ DB_PASSWORD="admin"
 DB_HOST="localhost"
 DB_PORT="5432"
 URI=""
-JWTSECRET="mwJyftGWUOk8ECPBhjDI3lro1b64LgT5"
+JWTSECRET="mwJytttWUOk8ECPBhjDI3lro1b33LgT5"
+```
 
 - The URI env variable can be used to overwhite the conection string URI for productio enviroments
 
